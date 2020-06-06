@@ -1,5 +1,5 @@
 ; Neue Datei anlegen -> Rechtsklick auf Eieruhr im Solution Explorer und Add.
-; "Die Register sollte man in einer zentralen Main Datei erschaffen." -Prof. Kumm 2020
+; "Die Register sollte man in einer zentralen Main Datei erschaffen." -Prof. Dr. Kumm 2020
 .cseg
 	rjmp main;
 
