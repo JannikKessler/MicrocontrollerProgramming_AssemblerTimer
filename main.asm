@@ -1,20 +1,24 @@
 ; Neue Datei anlegen -> Rechtsklick auf Eieruhr im Solution Explorer und Add.
-; "Die Register sollte man in einer zentralen Main Datei erschaffen." -Prof. Dr. Kumm 2020
+; "Die Register sollte man in einer zentralen Main Datei erschaffen." -Prof. Kumm 2020
 .cseg
 	rjmp main;
 
 .include "delay_long.asm"
 .include "display.asm"
+.include "pressUp.asm"
 
 ; Frequenz fuer Display
 .equ clk_freq_in_Hz = 16000000
 .equ io_freq_in_Hz = 400000
 .equ cnt_io_init = clk_freq_in_Hz/io_freq_in_Hz
+.equ pressUp_delayClk = io_freq_in_Hz - 8 / (21 * 2)		; Eine Sekunde Delay beim Hochdruecken des Countdowns
 
 ; accu ist temp Register
 .def accu = r16  ; accu register, used for temporary computations and return of function values
 .def arg0 = r17  ; argument 0 for subroutines
 .def arg1  = r18 ; argument 1 for subroutines
+.def num_right = r19	; Speichert aktuelle Sekunden (0-59)
+.def num_left = r20		; Speichert aktuelle Minuten (0-99)
 
 .def cnt_init_low  = r23
 .def cnt_init_mid  = r24
@@ -24,11 +28,16 @@
 .equ clk_bit = 5
 .equ dio_bit = 6 
 
+; Zeiteinstellbutton an D2
+.equ pressUp_bit = 2
+
 main:
 	rcall init_display      ; init the display
-
+	clr num_right
+	clr num_left
+	rcall pressUp_start
 	; Hier kann man festlegen was angezeigt werden muss
-
+	/*
 	; sets one digits from left to right to 1234:
 	ldi arg1,1				; set digit value ; Zahl selbst
 	ldi arg0,0              ; set digit no ; Position an der die Zahl hinkommt, hier 1234
@@ -42,7 +51,7 @@ main:
 	ldi arg1,4				; set digit value
 	ldi arg0,3              ; set digit no
 	rcall send_number       ; display digit
-
+	*/
 /*
 	; set digit value to 'A':
 	ldi arg1,0b01110111    ; set digit value
