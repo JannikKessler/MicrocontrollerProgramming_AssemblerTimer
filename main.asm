@@ -11,14 +11,17 @@
 .equ clk_freq_in_Hz = 16000000
 .equ io_freq_in_Hz = 400000
 .equ cnt_io_init = clk_freq_in_Hz/io_freq_in_Hz
-.equ pressUp_delayClk = io_freq_in_Hz - 8 / (21 * 2)		; Eine Sekunde Delay beim Hochdruecken des Countdowns
+.equ pressUp_delayClk = (io_freq_in_Hz - 8 / (21 * 2))	; Eine Sekunde Delay beim Hochdruecken des Countdowns
 
 ; accu ist temp Register
 .def accu = r16  ; accu register, used for temporary computations and return of function values
 .def arg0 = r17  ; argument 0 for subroutines
 .def arg1  = r18 ; argument 1 for subroutines
-.def num_right = r19	; Speichert aktuelle Sekunden (0-59)
-.def num_left = r20		; Speichert aktuelle Minuten (0-99)
+; Von links nach rechts
+.def num_0 = r19		; Speichert aktuelle Minuten im Zehner Bereich(0-9)
+.def num_1 = r20		; Speichert aktuelle Minuten im Einer Bereich(0-9)
+.def num_2 = r21		; Speichert aktuelle Sekunden im Zehner Bereich(0-5)
+.def num_3 = r22		; Speichert aktuelle Sekunden im Einer Bereich(0-9)
 
 .def cnt_init_low  = r23
 .def cnt_init_mid  = r24
@@ -33,8 +36,10 @@
 
 main:
 	rcall init_display      ; init the display
-	clr num_right
-	clr num_left
+	clr num_0
+	clr num_1
+	clr num_2
+	clr num_3
 	rcall pressUp_start
 	; Hier kann man festlegen was angezeigt werden muss
 	/*

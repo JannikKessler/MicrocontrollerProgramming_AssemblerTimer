@@ -18,6 +18,68 @@ pressUp_delay:
 	rjmp pressUp_start
 
 pressUp_incr:
+	ldi accu , 5
+	add num_3 , accu
+	cpi num_3 , 10
+	breq pressUp_secTenner
+	ldi arg1,5
+	ldi arg0,3
+	rcall send_number
+	rjmp pressUp_delay
+
+pressUp_secTenner:
+	ldi num_3 , 0
+	mov arg1,num_3
+	ldi arg0,3
+	rcall send_number
+	; Zehner Sekunde hochzaehlen
+	inc num_2
+	cpi num_2 , 6
+	breq pressUp_min
+	mov arg1,num_2
+	ldi arg0,2
+	rcall send_number
+	rjmp pressUp_delay
+
+pressUp_min:
+	ldi num_2 , 0
+	mov arg1,num_2
+	ldi arg0,2
+	rcall send_number
+	; Minute hochzaehlen
+	inc num_1
+	cpi num_1 , 10
+	breq pressUp_minTenner
+	mov arg1,num_1
+	ldi arg0,1
+	rcall send_number
+	rjmp pressUp_delay
+
+pressUp_minTenner:
+	ldi num_1 , 0
+	mov arg1,num_1
+	ldi arg0,1
+	rcall send_number
+	; Zehner Minute hochzaehlen
+	inc num_0
+	cpi num_0 , 10
+	breq pressUp_full
+	mov arg1,num_0
+	ldi arg0,0
+	rcall send_number
+	rjmp pressUp_delay
+
+; Wenn man 100:00 erreicht soll es abbrechen
+pressUp_full:
+	ldi num_0 , 9
+	ldi num_1 , 9
+	ldi num_2 , 5
+	ldi num_3 , 5
+	ret
+	/*
+pressUp_incr:
+	cpi num_right , 55
+	breq pressUp_addMin
 	sbr accu , 5
 	add num_right , accu
 	; Bei hinterster 0 muss die vorletzte inkrementiert werden
@@ -81,6 +143,20 @@ pressUp_set50:
 	rcall send_number
 	rjmp pressUp_delay
 
+pressUp_addMin:
+	ldi num_right , 0
+	inc num_left
+	ldi arg1,0
+	ldi arg0,3
+	rcall send_number
+	ldi arg1,0
+	ldi arg0,2
+	rcall send_number
+	mov arg1,num_left
+	ldi arg0,1
+	rcall send_number
+	rjmp pressUp_delay	
+
 pressUp_set0:
 	ldi arg1,0
 	ldi arg0,3
@@ -92,6 +168,7 @@ pressUp_set5:
 	ldi arg0,3
 	rcall send_number
 	rjmp pressUp_start
+	*/
 	/*
 	; Hier kann man festlegen was angezeigt werden muss
 
