@@ -11,7 +11,7 @@
 .equ clk_freq_in_Hz = 16000000
 .equ io_freq_in_Hz = 400000
 .equ cnt_io_init = clk_freq_in_Hz/io_freq_in_Hz
-.equ pressUp_delayClk = (io_freq_in_Hz - 8 / (21 * 2))	; Eine Sekunde Delay beim Hochdruecken des Countdowns
+.equ pressUp_delayClk = (clk_freq_in_Hz - 8) / (21 * 2)	; Eine Sekunde Delay beim Hochdruecken des Countdowns
 
 ; accu ist temp Register
 .def accu = r16  ; accu register, used for temporary computations and return of function values
