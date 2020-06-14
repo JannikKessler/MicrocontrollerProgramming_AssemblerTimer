@@ -1,21 +1,14 @@
-; 1sek Delay
-/*.equ clk_in_Mhz = 16000000
-.equ freq_per_Sek = 1 ; Die Loop soll 1mal pro Sekunde enden
-.equ offset = 15 ; Clks die außerhalb der Loop auftreten
-.equ clk_per_Loop = 11 ; Clks die innerhalb der Loop immer wieder auftreten 
-.equ counter = ((clk_in_Mhz/freq_per_Sek)-offset)/clk_per_Loop*/
+/*
+ * delay1sec.asm
+ *
+ *  Created: 10.06.2020 11:33:43
+ *   Author: arnof
+ */ 
 
-;.def test = r16
-/*.def count_low = r17 
-.def count_mid = r18 
-.def count_high = r19
-*/
-; Hauptprogramm
 delay1sec_start :
 	rcall delay1sec_resetcount ; Zurücksetzen
 	rcall delay1sec_waitforcount ; Abzählen
 ret
-;rjmp delay1sec_start
 
 ; Zuruecksetzen clk= 3+7
 delay1sec_resetcount :

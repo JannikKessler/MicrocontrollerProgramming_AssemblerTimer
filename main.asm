@@ -3,10 +3,11 @@
 .cseg
 	rjmp main;
 
-;.include "delay_long.asm"
 .include "display.asm"
 .include "pressUp.asm"
 .include "delay1sec.asm"
+.include "pressStart.asm"
+.include "buzzer.asm"
 
 ; Frequenz fuer Display
 .equ clk_freq_in_Hz = 16000000
@@ -16,18 +17,20 @@
 .equ clk_per_Loop = 11 ; Clks die innerhalb der Loop immer wieder auftreten 
 .equ counter = (clk_freq_in_Hz - offset)/(clk_per_Loop)
 .equ pressUp_counter = (clk_freq_in_Hz - offset)/(clk_per_Loop * 2)
-//.equ pressUp_delayClk = (clk_freq_in_Hz - 8) / (21 * 2)	; Eine Sekunde Delay beim Hochdruecken des Countdowns
+.equ buzz_pause = clk_freq_in_Hz / 22  ; buzzing in defined time e.g. 1s cyklus
 
 ; accu ist temp Register
 .def accu = r16  ; accu register, used for temporary computations and return of function values
 .def arg0 = r17  ; argument 0 for subroutines
 .def arg1  = r18 ; argument 1 for subroutines
+
 ; Von links nach rechts
 .def num_0 = r19		; Speichert aktuelle Minuten im Zehner Bereich(0-9)
 .def num_1 = r20		; Speichert aktuelle Minuten im Einer Bereich(0-9)
 .def num_2 = r21		; Speichert aktuelle Sekunden im Zehner Bereich(0-5)
 .def num_3 = r22		; Speichert aktuelle Sekunden im Einer Bereich(0-9)
 
+; Kombiniertes Register für Sekundendelay
 .def cnt_low  = r23
 .def cnt_mid  = r24
 .def cnt_high = r25
@@ -39,39 +42,25 @@
 ; Zeiteinstellbutton an D2
 .equ pressUp_bit = 2
 
+; Timer-Start-Button an D4
+.equ timeStart_bit = 4
+
+; buzzer is connected to D7
+.equ output_buzz = 7
+
+; Hauptprogramm
 main:
 	rcall init_display      ; init the display
+	rjmp loop
+
+; Loop
+loop :
+	rcall refresh_display
 	clr num_0
 	clr num_1
 	clr num_2
 	clr num_3
 	rcall pressUp_start
-	; Hier kann man festlegen was angezeigt werden muss
-	/*
-	; sets one digits from left to right to 1234:
-	ldi arg1,1				; set digit value ; Zahl selbst
-	ldi arg0,0              ; set digit no ; Position an der die Zahl hinkommt, hier 1234
-	rcall send_number       ; display digit
-	ldi arg1,2				; set digit value ; Die Zwei an Position 1
-	ldi arg0,1              ; set digit no
-	rcall send_number       ; display digit
-	ldi arg1,3				; set digit value
-	ldi arg0,2              ; set digit no
-	rcall send_number       ; display digit
-	ldi arg1,4				; set digit value
-	ldi arg0,3              ; set digit no
-	rcall send_number       ; display digit
-	*/
-/*
-	; set digit value to 'A':
-	ldi arg1,0b01110111    ; set digit value
-	;ldi arg1 , 0b11110111 ; fuer das Doppelpunkt noch
-	ldi arg0,0             ; set digit no
-	rcall send_digit       ; display digit
-
-*/
-loop:
-	rjmp loop		; loop forever
-
-
-
+	rcall pressStart_start
+	rcall buzzer_start
+rjmp loop
