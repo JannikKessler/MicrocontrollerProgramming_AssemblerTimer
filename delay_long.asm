@@ -8,23 +8,23 @@ delay_long_loop:
 	clc ; clear carry
 
 	; decrement counter:
-	sbci cnt_init_low,1
-	sbci cnt_init_mid,0
-	sbci cnt_init_high,0
+	sbci cnt_low,1
+	sbci cnt_mid,0
+	sbci cnt_high,0
 
 	; check if counter == 0 with constant time
 	clr r17               ; reset zero test register
-	tst cnt_init_high     ; test if zero
+	tst cnt_high     ; test if zero
 	in accu,SREG          ; copy SREG to accu
 	bst accu,1            ; T <- Z
 	bld r17,0             ; zero_test(0) <- Z
 
-	tst cnt_init_mid      ; test if zero
+	tst cnt_mid      ; test if zero
 	in accu,SREG          ; copy SREG to accu
 	bst accu,1            ; T <- Z
 	bld r17,1             ; zero_test(1) <- Z
 
-	tst cnt_init_low
+	tst cnt_low
 	in accu,SREG          ; copy SREG to accu
 	bst accu,1            ; T <- Z
 	bld r17,2             ; zero_test(2) <- Z

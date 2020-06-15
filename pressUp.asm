@@ -13,10 +13,10 @@
 	rjmp pressUp_start
 
 pressUp_delay:
-	ldi cnt_low , byte1(counter)
-	ldi cnt_mid , byte2(counter)
-	ldi cnt_high , byte3(counter)
-	rcall delay1sec_start
+	ldi cnt_low , byte1(pressUp_counter)
+	ldi cnt_mid , byte2(pressUp_counter)
+	ldi cnt_high , byte3(pressUp_counter)
+	rcall delay_long;delay1sec_start
 	rjmp pressUp_start
 
 pressUp_incr:

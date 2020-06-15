@@ -6,6 +6,7 @@
 .include "display.asm"
 .include "pressUp.asm"
 .include "delay1sec.asm"
+.include "delay_long.asm"
 .include "pressStart.asm"
 .include "buzzer.asm"
 
@@ -16,7 +17,7 @@
 .equ offset = 15 ; Clks die auﬂerhalb der Loop auftreten
 .equ clk_per_Loop = 11 ; Clks die innerhalb der Loop immer wieder auftreten 
 .equ counter = (clk_freq_in_Hz - offset)/(clk_per_Loop)
-.equ pressUp_counter = (clk_freq_in_Hz - offset)/(clk_per_Loop * 2)
+.equ pressUp_counter = (clk_freq_in_Hz - offset)/(clk_per_Loop * 2 * 2) //Viertelsekunden hochzaehlen
 .equ buzz_pause = clk_freq_in_Hz / 22  ; buzzing in defined time e.g. 1s cyklus
 
 ; accu ist temp Register
